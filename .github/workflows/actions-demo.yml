@@ -20,5 +20,7 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Install dep
         run:  pip3 install --no-cache-dir -r requirements.txt
+      - name: Run pytest
+        run: pytest
       - name: Run experiments
         run: python plot_digits_classification.py
