@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from sklearn import datasets
 from sklearn import  metrics, svm
+from skimage.transform import  resize
 from sklearn.model_selection import train_test_split
 from itertools import product
 
@@ -9,10 +10,12 @@ def read_data():
     digits = datasets.load_digits()
     return digits.images, digits.target
 
-def preprocess_data(images):
+def preprocess_data(images, shape):
     n_samples = len(images)
     # Reshape the images into 2D array
-    data = images.reshape((n_samples, -1))
+    image_resize = resize(images, (images.shape[0],shape[0],shape[1]))
+    data = image_resize.reshape((n_samples, -1))
+
     return data
 
 def split_train_dev_test(X, y, test_size, dev_size, random_state=1):
