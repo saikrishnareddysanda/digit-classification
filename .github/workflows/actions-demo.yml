@@ -20,5 +20,5 @@ jobs:
       - run: echo "🍏 This job's status is ${{ job.status }}."
       - name: Install dep
         run:  pip3 install --no-cache-dir -r requirements.txt
-      - name: Run experiments
+      - name: Print no of samples and width and height of the images. Run Experiments.
         run: python plot_digits_classification.py
