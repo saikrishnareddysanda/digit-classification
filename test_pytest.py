@@ -33,7 +33,7 @@ def test_data_splitting():
     X = X[:100,:,:]
     y = y[:100]
 
-    test_size = .1
+    test_size = .2
     dev_size = .6
     train_size = 1 - (test_size + dev_size)
 
