@@ -37,6 +37,10 @@ list_of_all_param_combination = create_combination_dictionaries_from_lists(
 test_size_list = [0.1, 0.2, 0.3]
 dev_size_list = [0.1, 0.2, 0.3]
 
+print("Number of total samples in the datset:" , images.shape[0])
+print("Height of the image is:", images.shape[1])
+print("Width of the image is:", images.shape[2])
+
 for test_size, dev_size in product(test_size_list, dev_size_list):
     train_size = round((1 - (test_size + dev_size)), 2)
 
