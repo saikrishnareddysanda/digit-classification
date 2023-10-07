@@ -22,17 +22,28 @@ from utils import (
     tune_hparams,
 )
 import pandas as pd
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--model', type=str, default='tree')
+parser.add_argument('--num_runs', type=int, default=1)
+parser.add_argument('--test_size', type=float, default=0.1)
+parser.add_argument('--dev_size', type=float, default=0.1)
+
+args = parser.parse_args()
 
 # Read images and labels from the dataset
 images, labels = read_data()
 
-num_runs = 5
 
+test_size_list = [args.test_size]
+dev_size_list = [args.dev_size]
 results_list = []
 
-for run in range(num_runs):
+for run in range(args.num_runs):
     run_dict_metrics = {}
-    for model_type in ['svm', 'tree']:
+    for model_type in [args.model]:
 
         if model_type == 'svm':
             gamma_ranges = [0.001, 0.01, 0.1, 1, 10, 100]
@@ -48,9 +59,6 @@ for run in range(num_runs):
         list_of_all_param_combination = create_combination_dictionaries_from_lists(
             hyperparameter_names, hyperparameter_lists
         )
-
-        test_size_list = [0.2]
-        dev_size_list = [0.2]
 
         # print("Number of total samples in the datset:" , images.shape[0])
         # print("Height of the image is:", images.shape[1])
