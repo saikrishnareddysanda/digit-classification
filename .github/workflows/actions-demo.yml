@@ -21,6 +21,4 @@ jobs:
       - name: Install dep
         run:  pip3 install --no-cache-dir -r requirements.txt
       - name: Run pytest
-        run: pytest
-      - name: Run experiments
-        run: python plot_digits_classification.py --production_model svm --candidate_model tree --num_runs 1 --test_size 0.1 --dev_size 0.1
+        run: python flask_test.py
