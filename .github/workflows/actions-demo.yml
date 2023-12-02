@@ -22,5 +22,5 @@ jobs:
         run:  pip3 install --no-cache-dir -r requirements.txt
       - name: Run code
         run: python plt_digit_classification.py
-      -name: pytest
+      - name: pytest
         run: pytest
