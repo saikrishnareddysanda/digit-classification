@@ -1,0 +1,4 @@
+FROM saimlops23.azurecr.io/dependency_image:latest
+COPY ./ /digits/
+WORKDIR /digits
+CMD ["pytest"]

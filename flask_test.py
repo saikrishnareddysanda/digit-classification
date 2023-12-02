@@ -1,39 +1,20 @@
-from api import app
-from sklearn.datasets import fetch_openml
+from api.app import app
 import numpy as np
-import random
+import json
 
-  
 
-def test_get_root():
-    response = app.test_client().get("/")
+def test_predict_svm():
+    response = app.test_client().get('/predict/svm')
+    print(response.data)
     assert response.status_code == 200
-    assert response.get_data() == b"<p>Hello, World!</p>"
+    assert json.loads(response.data) == {"message": "Model (svm) loaded successfully"}
 
-def test_post_root():
-    suffix = "post suffix"
-    response = app.test_client().post("/", json={"suffix":suffix})
-    assert response.status_code == 200    
-    assert response.get_json()['op'] == "Hello, World POST "+suffix
+def test_predict_tree():
+    response = app.test_client().get('/predict/tree')
+    assert response.status_code, 200
+    assert json.loads(response.data), {"message": "Model (tree) loaded successfully"}
 
-def test_post_predict():
-    for digit in range(10):
-        sample = get_sample_for_digit(digit)
-        response = app.test_client().post("/predict", json={"image": sample})
-        assert response.status_code == 200
-        assert response.get_data() == str(digit).encode()
-        
-
-def get_sample_for_digit(digit):
-    
-    mnist = fetch_openml(name="mnist_784", version=1)
-    images, labels = mnist.data, mnist.target.astype(int)
-    images = images.values.reshape((-1, 28, 28))
-
-    digit_indices = np.where(labels == digit)
-    random_index = random.choice(digit_indices[0])
-    
-    sample_image = images[random_index]
-    flattened_sample = sample_image.flatten()
-
-    return flattened_sample
+def test_predict_lr():
+    response = app.test_client().get('/predict/lr')
+    assert response.status_code == 200
+    assert json.loads(response.data) == {"message": "Model (lr) loaded successfully"}

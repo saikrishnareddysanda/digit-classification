@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 from sklearn import datasets
-from sklearn import  metrics, svm, tree
+from sklearn import  metrics, svm, tree, linear_model
+from sklearn.preprocessing import normalize
+from joblib import dump, load
 from sklearn.model_selection import train_test_split
 from itertools import product
 
@@ -13,6 +15,7 @@ def preprocess_data(images):
     n_samples = len(images)
     # Reshape the images into 2D array
     data = images.reshape((n_samples, -1))
+    data = normalize(data)
     return data
 
 def split_train_dev_test(X, y, test_size, dev_size, random_state=1):
@@ -27,6 +30,8 @@ def train_model(X_train, y_train, model_parameters, model_type="svm"):
         model = svm.SVC(**model_parameters)
     elif model_type == "tree":
         model = tree.DecisionTreeClassifier(**model_parameters)
+    elif model_type == "lr":
+        model = linear_model.LogisticRegression(**model_parameters)
     # Fit the model 
     model.fit(X_train, y_train)
     return model
@@ -55,14 +60,18 @@ def create_combination_dictionaries_from_lists(dict_keys, value_lists):
 
 def tune_hparams(X_train, y_train, X_dev, y_dev, list_of_all_param_combination, model_type):
     best_accuracy = -1
-
     for model_params in list_of_all_param_combination:
         model = train_model(X_train, y_train, model_params, model_type)
         accuracy = get_acc(model, X_dev, y_dev)
+        if model_type == 'lr':
+            model_path = "./models/M22AIE225_lr_{}".format(model_params['solver']) +'.joblib'
+            
+            dump(model, model_path)
 
         if accuracy > best_accuracy:
             best_accuracy = accuracy
             best_model = model
+            best_model_path = "./models/{}_".format(model_type) +"_".join(["{}:{}".format(k,v) for k,v in model_params.items()]) + ".joblib"
             best_hyperparameters = model_params
-
+    dump(best_model, best_model_path)
     return best_hyperparameters, best_model, best_accuracy

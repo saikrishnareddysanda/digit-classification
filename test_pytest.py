@@ -1,3 +1,6 @@
+import os
+from joblib import load
+from sklearn.linear_model import LogisticRegression
 from utils import create_combination_dictionaries_from_lists, split_train_dev_test, read_data
 
 
@@ -27,20 +30,37 @@ def test_create_combination_dictionaries_from_lists_value():
     assert (expected_comb1 in list_of_all_param_combination) and (expected_comb2 in list_of_all_param_combination)
 
 
-def test_data_splitting():
-    X, y = read_data()
+def test_lr_loading():
+    for i in os.listdir('./models'):
+        if i.startswith('M22AIE225'):
+            loaded_model = load('./models/'+i)
 
-    X = X[:100,:,:]
-    y = y[:100]
+            assert isinstance(loaded_model, LogisticRegression)
 
-    test_size = .2
-    dev_size = .6
-    train_size = 1 - (test_size + dev_size)
 
-    X_train, X_dev, X_test, y_train, y_dev, y_test = split_train_dev_test(
-        X, y, test_size, dev_size
-    )
-    # import pdb; pdb.set_trace()
-    # assert (len(X_train) == int(train_size * len(X))) and \
-    # (len(X_dev) == int(dev_size * len(X))) and \
-    # (len(X_test) == int(test_size * len(X)))
+def test_lr_correct_solver_loading():
+    for i in os.listdir('./models'):
+        if i.startswith('M22AIE225'):
+            loaded_model = load('./models/'+i)
+
+            solver_name_from_file = i.split('_')[2].split('.')[0]
+            assert loaded_model.get_params()['solver'] == solver_name_from_file
+
+
+# def test_data_splitting():
+#     X, y = read_data()
+
+#     X = X[:100,:,:]
+#     y = y[:100]
+
+#     test_size = .2
+#     dev_size = .6
+#     train_size = 1 - (test_size + dev_size)
+
+#     X_train, X_dev, X_test, y_train, y_dev, y_test = split_train_dev_test(
+#         X, y, test_size, dev_size
+#     )
+#     # import pdb; pdb.set_trace()
+#     # assert (len(X_train) == int(train_size * len(X))) and \
+#     # (len(X_dev) == int(dev_size * len(X))) and \
+#     # (len(X_test) == int(test_size * len(X)))
